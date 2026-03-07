@@ -1,0 +1,17 @@
+name: OpenHAB Config Validation
+on: [push, pull_request]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: OpenHAB Syntax Check
+        run: |
+          # Використання офіційного контейнера для перевірки папки conf
+          docker run --rm \
+            -v ${{ github.workspace }}/openhab/conf:/openhab/conf \
+            openhab/openhab:4.1.0 \
+            /openhab/runtime/bin/client -p habopen "config:check"

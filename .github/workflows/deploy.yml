@@ -1,0 +1,13 @@
+name: Deployment
+on:
+  workflow_run:
+    workflows: ["Docker Build"]
+    types: [completed]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Deploy Simulation
+        run: echo "Система готова до розгортання на Edge-пристрої"

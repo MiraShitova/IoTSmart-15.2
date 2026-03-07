@@ -1,35 +1,28 @@
-# Smart Greenhouse IoT System
+#  Smart Greenhouse: DevOps & CI/CD Edition
 
-Цей проєкт реалізує автоматизовану систему моніторингу та керування теплицею на базі OpenHAB. Система забезпечує збір метрик у реальному часі, їх збереження у базі даних часових рядів та візуалізацію через аналітичні дашборди.
+Цей репозиторій містить розширену версію системи "Smart Greenhouse", інтегровану з пайплайнами GitHub Actions для автоматизації тестування, валідації та збірки Docker-образів.
 
-## Архітектура
-* **OpenHAB**: Центральний вузол керування та автоматизації (DSL Rules).
-* **InfluxDB v2**: База даних для збереження метрик (Persistence) з організацією `my_iot_org` та бакетом `15.1`.
-* **Grafana**: Платформа для візуалізації даних та налаштування сповіщень (Alerting).
-* **Docker**: Контейнеризація всього стеку для швидкого розгортання.
+[![Config Validation](https://github.com/MiraShitova/IoTSmart-15.2/actions/workflows/validate.yml/badge.svg)](https://github.com/MiraShitova/IoTSmart-15.2/actions/workflows/validate.yml)
+[![Logic Tests](https://github.com/MiraShitova/IoTSmart-15.2/actions/workflows/test.yml/badge.svg)](https://github.com/MiraShitova/IoTSmart-15.2/actions/workflows/test.yml)
+[![Docker Build](https://github.com/MiraShitova/IoTSmart-15.2/actions/workflows/build.yml/badge.svg)](https://github.com/MiraShitova/IoTSmart-15.2/actions/workflows/build.yml)
 
-[Image of an IoT architecture diagram connecting sensors to OpenHAB, InfluxDB, and Grafana]
+## Архітектура пайплайну (Pipeline Architecture)
+Проєкт використовує чотири основні workflows для забезпечення якості коду та надійності розгортання:
 
-## Каталог метрик (Metrics Catalog)
-Система відстежує 6 основних показників:
+1. **Configuration Validation (`validate.yml`)**: Автоматична перевірка синтаксису файлів конфігурації OpenHAB (.items, .rules, .sitemaps) через Docker-контейнер.
+2. **Automated Testing (`test.yml`)**: Запуск Unit-тестів на Python за допомогою фреймворку pytest для перевірки логіки автоматизації насоса та порогів вологості.
+3. **Docker Image Build (`build.yml`)**: Збірка образу з використанням Multi-stage Dockerfile. Включає етап підготовки конфігурацій та створення фінального оптимізованого образу на базі Alpine Linux.
+4. **Deployment Simulation (`deploy.yml`)**: Заглушка для розгортання системи на Edge-пристрої після успішного проходження всіх попередніх етапів.
 
-| Ітем | Опис | Тип даних |
-| :--- | :--- | :--- |
-| **Virtual_Temp** | Симульована температура повітря (°C) | Float |
-| **Greenhouse_Hum** | Вологість повітря (%) | Float |
-| **Soil_Moisture** | Вологість ґрунту (%) | Float |
-| **Light_Intensity** | Рівень освітленості (lx) | Float |
-| **Greenhouse_Pump** | Статус насоса поливу (ON/OFF) | Boolean/Integer |
-| **Greenhouse_Temp** | Дані температури з MQTT каналу | Float |
 
-## Функціональні можливості
-* **Автоматизація**: Насос (`Greenhouse_Pump`) вмикається автоматично, якщо вологість ґрунту падає нижче 50%.
-* **Persistence**: Автоматичне збереження кожної зміни стану ітемів в InfluxDB.
-* **Агрегація**: Використання InfluxDB Tasks для розрахунку погодинних середніх значень (Hourly aggregations).
-* **Alerting**: Налаштовані Threshold-based alerts у Grafana для сповіщення про критичну температуру (>30°C).
 
-## Швидкий старт
-1. **Налаштування**: Переконайтеся, що файл `conf/services/influxdb.cfg` містить актуальний Token.
-2. **Запуск**: Виконайте команду в терміналі:
-   ```bash
-   docker-compose up -d
+##  Стратегія тестування (Testing Strategy)
+Для проєкту реалізовано декілька рівнів перевірки:
+* **Unit Tests**: Тестування логічної функції `get_pump_status` у файлі `tests/test_rules.py`. Перевіряється коректність увімкнення насоса при вологості < 50%.
+* **Syntax Checking**: Перевірка DSL Rules та конфігурацій OpenHAB на відповідність стандартам версії 4.x.
+* **Regression Testing**: Кожен новий Push автоматично перевіряє, чи не зламали нові зміни існуючу логіку системи.
+
+##  Docker & Оптимізація
+Dockerfile проєкту реалізований за принципом Multi-stage build:
+* **Stage 1 (Builder)**: Використовує повний образ OpenHAB для валідації конфігів.
+* **Stage 2 (Final)**: Базується на Alpine-версії для мінімізації розміру образу та покращення безпеки.
