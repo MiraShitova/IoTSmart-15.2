@@ -7,19 +7,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-
-      - name: Install PyYAML
-        run: pip install PyYAML
 
       - name: Syntax Check (Items & Sitemaps)
         run: |
           echo "Перевірка синтаксису ітемів..."
-          # Виправлено: прибрано openhab/ зі шляху
-          for file in conf/items/*.items; do
+          for file in openhab/conf/items/*.items; do
             if [ -f "$file" ]; then
               echo "Checking $file"
               grep -q "{" "$file" || (echo "Error in $file: Missing braces" && exit 1)
@@ -27,8 +19,7 @@ jobs:
           done
 
           echo "Перевірка сайтмапів..."
-          # Виправлено: прибрано openhab/ зі шляху
-          for file in conf/sitemaps/*.sitemap; do
+          for file in openhab/conf/sitemaps/*.sitemap; do
             if [ -f "$file" ]; then
               echo "Checking $file"
               grep -q "sitemap" "$file" || (echo "Error in $file: Not a valid sitemap" && exit 1)
@@ -37,5 +28,5 @@ jobs:
 
       - name: YAML & JSON Validation
         run: |
-          # Перевірка синтаксису твоїх CI/CD пайплайнів
+          # ТЗ вимагає перевірку YAML (наприклад, для твоїх workflows)
           python3 -c "import yaml, sys; [yaml.safe_load(open(f)) for f in sys.argv[1:]]" .github/workflows/*.yml
