@@ -1,0 +1,8 @@
+.env
+userdata/
+backups/
+
+Thumbs.db
+desktop.ini
+
+*.log

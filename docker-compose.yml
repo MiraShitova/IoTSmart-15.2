@@ -1,0 +1,77 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+    ports:
+      - "1883:1883"
+    networks:
+      - iot_network
+    restart: always
+    healthcheck:
+      test: ["CMD", "mosquitto_sub", "-t", "$SYS/#", "-C", "1"]
+      interval: 30s
+      timeout: 10s
+
+  influxdb:
+    image: influxdb:2.7
+    container_name: influxdb
+    env_file: .env
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+    ports:
+      - "8086:8086"
+    networks:
+      - iot_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "influx", "ping"]
+      interval: 30s
+      timeout: 10s
+
+  openhab:
+    image: openhab/openhab:latest
+    container_name: openhab
+    depends_on:
+      influxdb:
+        condition: service_healthy
+      mosquitto:
+        condition: service_healthy
+    volumes:
+      - ./conf:/openhab/conf
+      - ./userdata:/openhab/userdata
+      - ./addons:/openhab/addons
+    environment:
+      OPENHAB_HTTP_PORT: "8080"
+    ports:
+      - "8080:8080"
+    networks:
+      - iot_network
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    depends_on:
+      - influxdb
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - iot_network
+    restart: unless-stopped
+
+networks:
+  iot_network:
+    driver: bridge
+
+volumes:
+  influxdb_data:
+  grafana_data:

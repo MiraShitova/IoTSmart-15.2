@@ -1,0 +1,16 @@
+- name: Deploy OpenHAB IoT Stack
+  hosts: all
+  become: yes
+  tasks:
+    - name: Ensure Docker and Compose are installed
+      apt:
+        name: 
+          - docker.io
+          - docker-compose-v2
+        state: present
+        update_cache: yes
+
+    - name: Deploy Stack from local files
+      community.docker.docker_compose_v2:
+        project_src: ../../  # Оскільки ми в ansible/playbooks/
+        state: present
