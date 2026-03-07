@@ -1,22 +1,22 @@
-rule "Greenhouse Simulation"
+rule "Greenhouse Advanced Simulation"
 when
     Time cron "0/30 * * * * ?"
 then
-    var Number currentTemp = 24.0
-    if (Virtual_Temp.state instanceof Number) {
-        currentTemp = Virtual_Temp.state as Number
+    val Double temp = 22.0 + (Math::random * 5.0)
+    val Double hum = 45.0 + (Math::random * 15.0)
+    val Double moisture = 40.0 + (Math::random * 30.0)
+    val Double light = 200.0 + (Math::random * 400.0)
+
+    Virtual_Temp.postUpdate(temp)
+    Greenhouse_Hum.postUpdate(hum)
+    Soil_Moisture.postUpdate(moisture)
+    Light_Intensity.postUpdate(light)
+
+    if (moisture < 50.0) {
+        Greenhouse_Pump.postUpdate(ON)
+    } else {
+        Greenhouse_Pump.postUpdate(OFF)
     }
-    
-    var Number delta = (Math::random() - 0.5)
-    var Number newTemp = currentTemp + delta
 
-    if (newTemp < 18) newTemp = 18.5
-    if (newTemp > 30) newTemp = 29.5
-
-    Virtual_Temp.postUpdate(newTemp)
-    
-    var Number newHum = 40 + (Math::random() * 30)
-    Greenhouse_Hum.postUpdate(newHum)
-
-    logInfo("simulation", "Simulated Temp: " + newTemp + ", Hum: " + newHum)
+    logInfo("simulation", "Smart Greenhouse: T:" + temp + " H:" + hum + " Soil:" + moisture + " Pump:" + Greenhouse_Pump.state)
 end

@@ -1,5 +1,7 @@
-Number Greenhouse_Temp "Temperature [%.1f °C]" <temperature> { channel="mqtt:topic:mosquitto:greenhouse:temperature" }
-Number Greenhouse_Hum  "Humidity [%.1f %%]"    <humidity>    { channel="mqtt:topic:mosquitto:greenhouse:humidity" }
-Switch Greenhouse_Pump "Water Pump"            <faucet>      { channel="mqtt:topic:mosquitto:greenhouse:pump" }
+Number Greenhouse_Temp "Температура MQTT [%.1f °C]" <temperature> { channel="mqtt:topic:mosquitto:greenhouse:temperature" }
+Number Greenhouse_Hum  "Вологість [%.1f %%]"    <humidity>    { channel="mqtt:topic:mosquitto:greenhouse:humidity" }
+Switch Greenhouse_Pump "Насос поливу"            <faucet>      { channel="mqtt:topic:mosquitto:greenhouse:pump" }
 
-Number Virtual_Temp "Test Temp [%.1f °C]" <temperature>
+Number Soil_Moisture   "Вологість ґрунту [%.1f %%]" <moisture>
+Number Light_Intensity "Освітленість [%.1f lx]"   <sun>
+Number Virtual_Temp    "Тестова Температура [%.1f °C]" <temperature>
