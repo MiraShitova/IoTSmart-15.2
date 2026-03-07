@@ -1,24 +1,22 @@
-rule "Temperature Simulation Scenario"
+rule "Greenhouse Simulation"
 when
-    Item Start_Simulation received command ON
+    Time cron "0/30 * * * * ?"
 then
-    logInfo("Simulation", "Сценарій імітації запущено...")
-
-    logInfo("Simulation", "Крок 1: Відправка нормальних значень")
-    Temperature_Sensor.sendCommand(22.5)
+    var Number currentTemp = 24.0
+    if (Virtual_Temp.state instanceof Number) {
+        currentTemp = Virtual_Temp.state as Number
+    }
     
-    Thread::sleep(5000)
-    
-    Temperature_Sensor.sendCommand(23.2)
-    Thread::sleep(5000)
+    var Number delta = (Math::random() - 0.5)
+    var Number newTemp = currentTemp + delta
 
-    logInfo("Simulation", "Крок 2: Імітація критичного збою!")
-    Temperature_Sensor.sendCommand(48.7)
-    
-    Thread::sleep(7000) 
-    logInfo("Simulation", "Крок 3: Повернення до стабільного стану")
-    Temperature_Sensor.sendCommand(21.9)
+    if (newTemp < 18) newTemp = 18.5
+    if (newTemp > 30) newTemp = 29.5
 
-    Start_Simulation.postUpdate(OFF)
-    logInfo("Simulation", "Сценарій завершено.")
+    Virtual_Temp.postUpdate(newTemp)
+    
+    var Number newHum = 40 + (Math::random() * 30)
+    Greenhouse_Hum.postUpdate(newHum)
+
+    logInfo("simulation", "Simulated Temp: " + newTemp + ", Hum: " + newHum)
 end

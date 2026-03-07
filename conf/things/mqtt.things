@@ -1,0 +1,8 @@
+Bridge mqtt:broker:mosquitto "Mosquitto Broker" [ host="mosquitto", port=1883, secure=false ] {
+    Thing topic greenhouse "Greenhouse Sensors" {
+        Channels:
+            Type number : temperature "Temperature" [ stateTopic="greenhouse/temp" ]
+            Type number : humidity    "Humidity"    [ stateTopic="greenhouse/hum" ]
+            Type switch : pump        "Water Pump"     [ stateTopic="greenhouse/pump", commandTopic="greenhouse/pump/set" ]
+    }
+}

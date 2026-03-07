@@ -12,5 +12,5 @@
 
     - name: Deploy Stack from local files
       community.docker.docker_compose_v2:
-        project_src: ../../  # Оскільки ми в ansible/playbooks/
+        project_src: ../../  
         state: present

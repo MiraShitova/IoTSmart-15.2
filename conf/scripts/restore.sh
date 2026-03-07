@@ -1,5 +1,3 @@
-#!/bin/bash
-# Відновлення з архіву
 BACKUP_PATH=$1
 
 if [ -z "$BACKUP_PATH" ]; then

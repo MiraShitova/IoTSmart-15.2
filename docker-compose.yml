@@ -11,7 +11,7 @@ services:
       - iot_network
     restart: always
     healthcheck:
-      test: ["CMD", "mosquitto_sub", "-t", "$SYS/#", "-C", "1"]
+      test: ["CMD", "mosquitto_sub", "-t", "$$SYS/#", "-C", "1"]
       interval: 30s
       timeout: 10s
 
