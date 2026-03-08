@@ -1,5 +1,0 @@
-Number Virtual_Temp    "Температура [%.1f °C]" <temperature>
-Number Greenhouse_Hum  "Вологість [%.1f %%]"    <humidity>
-Number Soil_Moisture   "Вологість ґрунту [%.1f %%]" <moisture>
-Number Light_Intensity "Освітленість [%.1f lx]"   <sun>
-Switch Greenhouse_Pump "Насос поливу"            <faucet>

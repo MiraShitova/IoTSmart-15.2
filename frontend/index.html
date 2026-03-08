@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart City Waste Management LIVE</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+    <style>
+        #map { height: 600px; width: 100%; border-radius: 15px; }
+        .status-panel { font-family: sans-serif; padding: 15px; background: #eef; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="status-panel">
+        <h2>🚚 LIVE: Моніторинг сміттєвих баків</h2>
+        <p id="conn-status">Статус: Підключення до MQTT...</p>
+    </div>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([50.45, 30.52], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        var markers = {};
+        const initialBins = [
+            {id: "bin_1", lat: 50.455, lng: 30.524}, {id: "bin_2", lat: 50.448, lng: 30.520},
+            {id: "bin_3", lat: 50.452, lng: 30.517}, {id: "bin_4", lat: 50.445, lng: 30.510},
+            {id: "bin_5", lat: 50.458, lng: 30.530}, {id: "bin_6", lat: 50.460, lng: 30.520},
+            {id: "bin_7", lat: 50.440, lng: 30.500}, {id: "bin_8", lat: 50.450, lng: 30.540},
+            {id: "bin_9", lat: 50.465, lng: 30.510}, {id: "bin_10", lat: 50.435, lng: 30.525}
+        ];
+
+        initialBins.forEach(bin => {
+            markers[bin.id] = L.circle([bin.lat, bin.lng], {
+                color: 'gray', fillColor: 'gray', fillOpacity: 0.7, radius: 150
+            }).addTo(map).bindPopup(`Чекаю на дані від ${bin.id}...`);
+        });
+
+        var client = new Paho.MQTT.Client("localhost", 9001, "web_client_" + Math.random());
+
+        client.onMessageArrived = function(message) {
+            let data = JSON.parse(message.payloadString);
+            let binId = data.id;
+            let fill = data.fill_level;
+
+            if (markers[binId]) {
+                let color = fill > 70 ? 'red' : (fill > 30 ? 'orange' : 'green');
+                markers[binId].setStyle({ color: color, fillColor: color });
+                markers[binId].setPopupContent(`<b>${binId}</b><br>Заповнено: ${fill}%`);
+            }
+        };
+
+        client.connect({ onSuccess: () => {
+            document.getElementById('conn-status').innerText = "Підключено до системи моніторингу";
+            client.subscribe("smart_city/waste/#");
+        }});
+    </script>
+</body>
+</html>

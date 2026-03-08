@@ -1,28 +1,14 @@
-#  Smart Greenhouse: DevOps & CI/CD Edition
+# Smart City Waste Management System
 
-Цей репозиторій містить розширену версію системи "Smart Greenhouse", інтегровану з пайплайнами GitHub Actions для автоматизації тестування, валідації та збірки Docker-образів.
+Проект інтелектуальної системи для моніторингу та оптимізації збору міських відходів. Система використовує технології IoT для відстеження стану контейнерів у реальному часі та розрахунку оптимальних маршрутів для спеціалізованого транспорту.
 
-[![Config Validation](https://github.com/MiraShitova/IoTSmart-15.2/actions/workflows/validate.yml/badge.svg)](https://github.com/MiraShitova/IoTSmart-15.2/actions/workflows/validate.yml)
-[![Logic Tests](https://github.com/MiraShitova/IoTSmart-15.2/actions/workflows/test.yml/badge.svg)](https://github.com/MiraShitova/IoTSmart-15.2/actions/workflows/test.yml)
-[![Docker Build](https://github.com/MiraShitova/IoTSmart-15.2/actions/workflows/build.yml/badge.svg)](https://github.com/MiraShitova/IoTSmart-15.2/actions/workflows/build.yml)
+## Функціональні можливості
+* **IoT компонента**: Симуляція 10 розумних контейнерів з ультразвуковими сенсорами заповненості та GPS модулями.
+* **Протоколи передачі даних**: Використання MQTT для обміну даними між пристроями та WebSockets для оновлення карти в реальному часі.
+* **Оптимізація маршрутів**: Реалізація алгоритму вирішення задачі комівояжера (TSP) для мінімізації логістичних витрат.
+* **Візуалізація**: Інтерактивний Dashboard з картою та кольоровою індикацією критичних рівнів заповнення.
 
-## Архітектура пайплайну (Pipeline Architecture)
-Проєкт використовує чотири основні workflows для забезпечення якості коду та надійності розгортання:
-
-1. **Configuration Validation (`validate.yml`)**: Автоматична перевірка синтаксису файлів конфігурації OpenHAB (.items, .rules, .sitemaps) через Docker-контейнер.
-2. **Automated Testing (`test.yml`)**: Запуск Unit-тестів на Python за допомогою фреймворку pytest для перевірки логіки автоматизації насоса та порогів вологості.
-3. **Docker Image Build (`build.yml`)**: Збірка образу з використанням Multi-stage Dockerfile. Включає етап підготовки конфігурацій та створення фінального оптимізованого образу на базі Alpine Linux.
-4. **Deployment Simulation (`deploy.yml`)**: Заглушка для розгортання системи на Edge-пристрої після успішного проходження всіх попередніх етапів.
-
-
-
-##  Стратегія тестування (Testing Strategy)
-Для проєкту реалізовано декілька рівнів перевірки:
-* **Unit Tests**: Тестування логічної функції `get_pump_status` у файлі `tests/test_rules.py`. Перевіряється коректність увімкнення насоса при вологості < 50%.
-* **Syntax Checking**: Перевірка DSL Rules та конфігурацій OpenHAB на відповідність стандартам версії 4.x.
-* **Regression Testing**: Кожен новий Push автоматично перевіряє, чи не зламали нові зміни існуючу логіку системи.
-
-##  Docker & Оптимізація
-Dockerfile проєкту реалізований за принципом Multi-stage build:
-* **Stage 1 (Builder)**: Використовує повний образ OpenHAB для валідації конфігів.
-* **Stage 2 (Final)**: Базується на Alpine-версії для мінімізації розміру образу та покращення безпеки.
+## Інструкція з розгортання
+1. **Інфраструктура**: Запустіть MQTT брокер за допомогою Docker Compose: `docker-compose up -d mosquitto`.
+2. **Симуляція**: Встановіть необхідні залежності командою `pip install paho-mqtt` та запустіть скрипт `python iot/simulator.py`.
+3. **Візуалізація**: Для доступу до панелі моніторингу відкрийте файл `frontend/index.html` у будь-якому сучасному браузері.
