@@ -1,7 +1,6 @@
 name: Build & Security
-on:
-  push:
-    tags: ['v*'] 
+
+on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
