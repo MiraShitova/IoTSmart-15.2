@@ -2,6 +2,8 @@
 
 ![Validation Status](https://github.com/MiraShitova/IoTSmart-15.2/actions/workflows/validate.yml/badge.svg)
 ![Testing Status](https://github.com/MiraShitova/IoTSmart-15.2/actions/workflows/test.yml/badge.svg)
+![Build & Security](https://github.com/MiraShitova/IoTSmart-15.2/actions/workflows/build.yml/badge.svg)
+![Deployment Status](https://github.com/MiraShitova/IoTSmart-15.2/actions/workflows/deploy.yml/badge.svg)
 
 ## Pipeline Architecture
 Система використовує чотириступеневий пайплайн автоматизації:
