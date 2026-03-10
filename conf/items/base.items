@@ -1,0 +1,4 @@
+Group gSystem "System Group"
+
+Switch Test_Switch "Контрольний перемикач" (gSystem)
+Number Test_Sensor "Контрольний датчик" (gSystem)

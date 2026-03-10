@@ -5,11 +5,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-      - name: Install dependencies
-        run: pip install pytest
-      - name: Run Tests
-        run: pytest tests/
+        with: { python-version: '3.9' }
+      - name: Run Pytest
+        run: |
+          pip install pytest
+          pytest tests/  # Запуск Unit, Integration, Regression тестів

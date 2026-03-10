@@ -1,0 +1,8 @@
+sitemap home  {
+    Frame label="Керування світлом" {
+        Switch item=Light_LivingRoom
+    }
+    Frame label="Дані датчиків" {
+        Text item=Sensor_Temperature
+    }
+}

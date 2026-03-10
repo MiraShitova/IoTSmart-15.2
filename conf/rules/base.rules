@@ -1,0 +1,6 @@
+rule "Base Logic Check"
+when
+    Item Test_Switch changed
+then
+    logInfo("System", "Статус пристрою змінено на: " + Test_Switch.state)
+end

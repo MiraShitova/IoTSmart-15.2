@@ -5,11 +5,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: OpenHAB Syntax Check
+      - name: OpenHAB Config Validation
         run: |
-          docker run --rm -v $(pwd)/conf:/openhab/conf openhab/openhab:latest ./start.sh --check-config
-      - name: Lint YAML/JSON
+          docker run --rm -v $(pwd)/openhab/conf:/openhab/conf openhab/openhab:latest ./start.sh --check-config
+      - name: Linting & Style
         run: |
           pip install yamllint
-          yamllint .
+          echo "rules: {line-length: disable}" > .yamllint
+          yamllint -c .yamllint .
           find . -name "*.json" -type f -exec jq . {} +

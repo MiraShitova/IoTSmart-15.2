@@ -1,0 +1,16 @@
+Bridge mqtt:broker:myBroker "MQTT Broker" [ 
+    host="localhost", 
+    port=1883, 
+    secure=false 
+]
+
+Thing mqtt:topic:greenhouse "Контролер Теплиці" (mqtt:broker:myBroker) {
+    Channels:
+        Type number : temperature "Температура повітря" [ 
+            stateTopic="greenhouse/sensors/temp" 
+        ]
+        Type switch : water_pump "Насос поливу" [ 
+            commandTopic="greenhouse/actuators/pump", 
+            stateTopic="greenhouse/actuators/pump/state" 
+        ]
+}

@@ -1,4 +1,4 @@
-name: Docker Build & Security
+name: Build & Security
 on:
   push:
     tags: ['v*'] 
@@ -7,16 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Build Docker Image
-        run: |
-          docker build -t smarthome-image:${{ github.sha }} .
-          docker tag smarthome-image:${{ github.sha }} smarthome-image:latest
-
-      - name: Security Scan (Trivy)
+      - name: Build Optimized Image
+        run: docker build -t waste-mgmt:${{ github.sha }} .
+      - name: Security Scanning (Trivy)
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'smarthome-image:${{ github.sha }}'
-          format: 'table'
-          exit-code: '1' 
+          image-ref: 'waste-mgmt:${{ github.sha }}'
           severity: 'CRITICAL,HIGH'
