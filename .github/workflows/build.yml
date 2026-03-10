@@ -1,5 +1,4 @@
 name: Build & Security
-
 on: [push]
 jobs:
   build:
