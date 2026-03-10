@@ -14,4 +14,3 @@ jobs:
         with:
           image-ref: 'waste-mgmt:${{ github.sha }}'
           severity: 'CRITICAL,HIGH'
-          
