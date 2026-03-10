@@ -6,9 +6,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: OpenHAB Syntax Check
-        uses: openhab/openhab-check-config@main
-        with:
-          config_path: './openhab/conf'
+        run: |
+          docker run --rm -v $(pwd)/conf:/openhab/conf openhab/openhab:latest ./start.sh --check-config
       - name: Lint YAML/JSON
         run: |
           pip install yamllint
