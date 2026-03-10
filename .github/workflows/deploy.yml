@@ -1,0 +1,15 @@
+name: Deploy Artifacts
+on:
+  workflow_run:
+    workflows: ["Docker Build & Security"]
+    types: [completed]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Archive Production Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-configs
+          path: openhab/conf/

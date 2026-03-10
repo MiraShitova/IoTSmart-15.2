@@ -1,0 +1,16 @@
+name: Validation
+on: [push]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: OpenHAB Syntax Check
+        uses: openhab/openhab-check-config@main
+        with:
+          config_path: './openhab/conf'
+      - name: Lint YAML/JSON
+        run: |
+          pip install yamllint
+          yamllint .
+          find . -name "*.json" -type f -exec jq . {} +
